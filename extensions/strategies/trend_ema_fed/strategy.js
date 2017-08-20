@@ -3,7 +3,7 @@ var z = require('zero-fill')
 
 module.exports = function container (get, set, clear) {
   return {
-    name: 'trend_ema',
+    name: 'trend_ema_fed',
     description: 'Buy when (EMA - last(EMA) > 0) and sell when (EMA - last(EMA) < 0). Optional buy on low RSI.',
 
     getOptions: function () {
@@ -48,23 +48,25 @@ module.exports = function container (get, set, clear) {
         }
       }
       if (typeof s.period.trend_ema_stddev === 'number') {
-        if (s.period.trend_ema_rate > s.period.trend_ema_stddev) {
-          if (s.trend !== 'up') {
-            s.acted_on_trend = false
-          }
-          s.trend = 'up'
-          s.signal = !s.acted_on_trend ? 'sell' : null
-          s.cancel_down = false
+              if (s.period.trend_ema_rate > s.period.trend_ema_stddev || (s.period.trend_ema_rate > s.lookback.trend_ema/2 && s.period.trend_ema_rate < 0)) {
+                if (s.trend !== 'up') {
+                  s.acted_on_trend = false
+                }
+
+                s.trend = 'up'
+                s.signal = !s.acted_on_trend ? 'buy' : null
+                s.cancel_down = false
+
+              }
+              else if ((!s.cancel_down && (s.period.trend_ema_rate < (s.period.trend_ema_stddev * -1)/10))||(s.period.trend_ema_rate > s.lookback.trend_ema*2 && s.period.trend_ema_rate > 0)) {
+                if (s.trend !== 'down') {
+                  s.acted_on_trend = false
+                }
+                s.trend = 'down'
+                s.signal = !s.acted_on_trend ? 'sell' : null
+              }
         }
-        else if (!s.cancel_down && s.period.trend_ema_rate < (s.period.trend_ema_stddev * -1)) {
-          if (s.trend !== 'down') {
-            s.acted_on_trend = false
-          }
-          s.trend = 'down'
-          s.signal = !s.acted_on_trend ? 'buy' : null
-        }
-      }
-      cb()
+        cb()
     },
 
     onReport: function (s) {
