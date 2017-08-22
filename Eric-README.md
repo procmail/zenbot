@@ -450,7 +450,7 @@ wrote simulations/sim_result_bitfinex.ETH-USD_170818_182218_UTC.html
 ### mine (not working?)
 
 `
-zenbot trade bittrex.XRP-USDT --paper --period=3m --min_periods=10 --trend_ema1=10 --trend_ema2=20 --asset_capital=0 --currency_capital=1000 --buy_pct=50 -sell_pct=90 --reset_profit --strategy=double_ema_v2
+zenbot trade bittrex.XRP-USDT --paper --period=3m --min_periods=10 --trend_ema1=10 --trend_ema2=20 --asset_capital=0 --currency_capital=1000 --buy_pct=50 --sell_pct=90 --reset_profit --strategy=double_ema_v2
 `
 
 ##### Results
@@ -549,7 +549,33 @@ zenbot trade bittrex.XRP-USDT --paper --period=3m --min_periods=10 --trend_ema1=
 `
 ./zenbot.sh trade bittrex.neo-usdt --paper --max_slippage_pct 2 --period=15s --markup_pct 0.2 --order_adjust_time 5000 --strategy=trend_ema_fed --reset_profit --asset_capital=0 --currency_capital=1000
 `
-2.
+
+# Live Trades
+
+- `
+./zenbot.sh trade bittrex.neo-USDT --period=2m --min_periods=3 --trend_ema=2 --oversold_rsi_periods 26 --oversold_rsi 30 --neutral_rate 0.7 --strategy=trend_ema --max_sell_loss_pct=0.1 --profit_stop_enable_pct=10 --profit_stop_pct=4
+`
+    - **Starting balance: 15.88 NEO  804.57558 USDT**
+
+- `
+./zenbot.sh trade bitstamp.eth-usd --max_slippage_pct 2 --period=15s --markup_pct 0.2 --order_adjust_time 5000 --strategy=trend_ema_fed --debug
+`
+    - **-1.6%** after hours.
+
+- `
+./zenbot.sh trade bittrex.neo-USDT --period=1m --min_periods=3 --trend_ema=2 --oversold_rsi_periods 26 --oversold_rsi 30 --neutral_rate 0.7 --strategy=trend_ema --max_sell_loss_pct=0.1 --profit_stop_enable_pct=10 --profit_stop_pct=4
+`
+    - After hours, there is no profit and this error shows:
+`
+2017-08-20 20:31:21 - funds on hold after cancel, waiting 5s
+`
+
+- `
+./zenbot.sh trade bittrex.NEO-USDT --period=2m --min_periods=10 --trend_ema=10 --neutral_rate=0.15 --strategy=trend_ema --buy_pct=50 --sell_pct=90 --max_sell_loss_pct=0.1 --debug
+`
+    - **-0.4%** after 1 hours+.
+    - So far using various strategies on this bot to trade NEO-USD(T) has not been profitable.
+
 
 ---
 
